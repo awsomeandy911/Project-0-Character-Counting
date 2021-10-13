@@ -4,7 +4,7 @@ CS 3113 Fall 2021
 Andy Le
 
 #Build
-Command "make all" will run the code in a0.c
+Command "make all" will run the code in project0.c
 Command "make clean" will clear any executables generated.
 
 #Bugs
