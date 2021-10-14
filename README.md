@@ -8,3 +8,6 @@ Command "make all" will run the code in project0.c
 Command "make clean" will clear any executables generated.
 
 #Bugs
+No bugs were found
+
+No external libraries were used.
