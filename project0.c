@@ -193,41 +193,44 @@ void print_list(LinkedList *head)
 int main(int argc, char *argv[])
 {
   
+    //set first byte to 0
     int byte = 0;
+
     struct LinkedList *LinkedList = NULL;
 
 	//get the first byte of characters until it reaches EOF
     while((byte = fgetc(stdin)) != EOF) 
     {
         //compare first byte to hex values to determine how many more bytes to read
-        int extra_bytes = 0;
+        int byte_exta = 0;
+
         if (byte >= 0xF0) 
         { 	
             //the case for [11110]
-            extra_bytes = 3;
+            byte_exta = 3;
         } 
         else if (byte >= 0xE0) 
         {  
             //the case for [1110]
-            extra_bytes = 2;
+            byte_exta = 2;
         } 
         else if (byte >= 0xC0) 
         {  
             //the case for [110]
-            extra_bytes = 1;
+            byte_exta = 1;
         }						
 
         //create an array to hold bytes
-        unsigned char byte_array[5];
+        unsigned char arr_byte[5];
 
         //pointer to the byte array
-        unsigned char *byte_pointer = byte_array;
+        unsigned char *byte_pointer = arr_byte;
 
 		//byte pointer will hold the first byte
         byte_pointer += sprintf(byte_pointer, "%c", byte);
 
-        //iterate through the number of extra_bytes we have and set it to the pointer
-        for (int i = 0; i < extra_bytes; ++i) 
+        //iterate through the number of byte_exta we have and set it to the pointer
+        for (int i = 0; i < byte_exta; ++i) 
         {
             byte = fgetc(stdin);
 
@@ -236,7 +239,7 @@ int main(int argc, char *argv[])
         }
 
         //set the array of bytes to the linked list
-        insert_list(&LinkedList, byte_array);
+        insert_list(&LinkedList, arr_byte);
     }
 
     //sort the list
