@@ -1,13 +1,7 @@
 all: project0
 
-.c:
-    gcc -Wall $< -o $@
-
-project0: project0.o project0.c
-    gcc -o project0 project0.o
-
-project0.o: project0.c
-    gcc -I. -c project0.c
+a0: project0.c
+	cc project0.c -o project0
 
 clean:
-    rm -f *.o project0
+	rm -f project0
