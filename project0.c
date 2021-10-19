@@ -19,9 +19,9 @@ struct LinkedList
 typedef struct LinkedList LinkedList;
 
 //comparing list frequency
-int comparelist(LinkedList *list_1, LinkedList *list_2)
+int comparelist(LinkedList *firstlist, LinkedList *secondlist)
 {
-    return list_1->frequency - list_2->frequency;
+    return firstlist->frequency - secondlist->frequency;
 }
 
 //sorting the linked list by using merge sort
