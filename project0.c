@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
     }
 
     //sort the list
-    struct LinkedList *list = listsort(LinkedList);
+    struct LinkedList *list = sortlist(LinkedList);
 
     //print the list
     print_list(list);
