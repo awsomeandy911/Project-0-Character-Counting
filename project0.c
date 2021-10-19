@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#define MAX_SIZE 100000000
+#define MAX_SIZE 1112064
 
 //struct that stores unicode objects
 struct UnicodeElement 
@@ -175,6 +175,7 @@ int main(int argc, char **argv)
 
         else 
         {
+                //changes NULL values of unicode character
                 Unicode[count].frequency++;
                 if (result == 1)
                     Unicode[count].byte_1 = firstChar;
