@@ -15,6 +15,7 @@ struct LinkedList
     //array that holds the bytes
     char c_arr[5];
 };
+
 typedef struct LinkedList LinkedList;
 
 //comparing list frequency
@@ -150,6 +151,7 @@ void insert_list(LinkedList **head, const char *to_insert)
         //if the linked list is null, then we see the 1st character 
         if ((*head) == NULL) 
         {
+            //allocate memory for the size of linked list
             (*head) = (struct LinkedList*) malloc(sizeof(struct LinkedList *));
 
             //set the next list to null in case it's populated
