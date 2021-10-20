@@ -3,256 +3,182 @@
 #include <string.h>
 #include <unistd.h>
 
-//making a Linked List
-struct LinkedList
+//maximum size of all unicode characters
+#define MAX_SIZE 1112064
+
+//struct that stores unicode objects
+struct UnicodeElement 
 {
-    //character frequency
-    int frequency;
+    //variables for size and frequency of unicode characters 
+    int size, frequency;
 
-    //next pointer
-    struct LinkedList *next;
-
-    //array that holds the bytes
-    char c_arr[5];
+    //variables for the bits of unicode characters
+    unsigned char byte_1, byte_2, byte_3, byte_4;
 };
+typedef struct UnicodeElement UnicodeElement;
 
-typedef struct LinkedList LinkedList;
-
-//comparing list frequency
-int comparelist(LinkedList *firstlist, LinkedList *secondlist)
+//swap function that uses built-in c function (quick sort)
+void swap(const void *X, const void *Y)
 {
-    return firstlist->frequency - secondlist->frequency;
+    int xCount, yCount;
+
+    xCount = ((struct UnicodeElement *)X)->frequency;
+    yCount = ((struct UnicodeElement *)Y)->frequency;
+
+    if(yCount < xCount)
+    {
+        return 1;
+    }
+        else
+        {
+            return -1;
+        }
+
 }
 
-//sorting the linked list by using merge sort
-LinkedList *sortlist(LinkedList *list)
+//prints and sorts out unicode characters
+void print(struct UnicodeElement element[], int size)
 {
-    //pointer variables
-    LinkedList *temp, *a, *element, *tail;
-
-    //variables that hold the number of merges and the sizes of list, temp, and a
-    int size_list, merge_num, size_temp, size_a;
-
-    //check if list exists, if not return NULL
-    if(!list)
+    //prints out unicode object values
+    for (int i  = 0; i < size; i++)
     {
-        return NULL;
+        unsigned char arr[4];
+        
+        //copy array of Unicode elements
+        arr[0] = element[i].byte_1;
+        arr[1] = element[i].byte_2;
+        arr[2] = element[i].byte_3;
+        arr[3] = element[i].byte_4;
+
+        unsigned char *str = &arr[0];
+
+        //print out in correct format
+        printf("%s", str);
+        printf("->");
+        printf("%d\n", element[i].frequency);
     }
     
-    /* assume the list size is at least 1 since 
-       there must be at least one element
-    */
-    size_list = 1;
+}
 
-    //infinite loop
-    while(1)
+int main(int argc, char **argv)
+{
+    //struct that points to unicode objects
+    struct UnicodeElement *Unicode = malloc(MAX_SIZE * sizeof(struct UnicodeElement));
+
+    //varaiables to store 1st, 2nd, 3rd, and 4th byte of unicode characters
+    unsigned char firstChar, secondChar, thirdChar, fourthChar;
+
+    //variable that stores the byte size result
+    int result;
+
+    //variable that acess struct elements from unicode and tracks count
+    int count = 0;
+
+    //varaiable that compares two unicode characters
+    int compare = 0;
+
+    //gets first byte by reading first unicode character
+    firstChar = fgetc(stdin);
+
+    //get first bytes of characters until it reaches EOF
+    while(firstChar != EOF)
     {
-        //set temp to the head of list
-        temp = list;
-        list = NULL;
-        tail = NULL;
+        //read certain # of bits depending on four leading bits
+        if (firstChar < 192)
+            result = 1;
 
-        //count the number of merges
-        merge_num = 0;
+        if (firstChar >= 192 & firstChar < 224)
+            result = 2;
 
-        while(temp)
+        if (firstChar >= 224 & firstChar < 240)
+            result = 3;
+
+        if (firstChar >= 240)
+            result = 4;
+
+        //if bit size is 2, read 2nd unicode character
+        if(result == 2)
         {
-            //increment the number of merges everytime it loops
-            merge_num++;
+            secondChar = fgetc(stdin);
+        }
 
-            //set a to the head of list
-            a = temp;
-            size_temp = 0;
+        //if bit size is 3, read 2nd & 3rd unicode character
+        if(result == 2)
+        {
+            secondChar = fgetc(stdin);
+            thirdChar = fgetc(stdin);
+        }
 
-            //loop a by the list size
-            for(int i = 0; i < size_list; i++)
-            {
-                size_temp++;
-                a = a -> next;
+        //if bit size is 4, read 2nd, 3rd, & 4th unicode character
+        if(result == 2)
+        {
+            secondChar = fgetc(stdin);
+            thirdChar = fgetc(stdin);
+            fourthChar = fgetc(stdin);
+        }
 
-                //break if a doesn't exist
-                if(!a) 
+        //check to see if given unicode was read in or not
+        for(int i = 0; i < count; i++)
+        {
+            if (result == 1)
+                    compare = (Unicode[i].byte_1 == firstChar);
+
+                if (result == 2)
+                    compare = ((Unicode[i].byte_1 == firstChar) & ((Unicode[i].byte_2) == secondChar));
+
+                if (result == 3) 
+                    compare = (Unicode[i].byte_1 == firstChar) & (Unicode[i].byte_2 == secondChar) & (Unicode[i].byte_3 == thirdChar);
+               
+                if (result == 4) 
+                    compare = (Unicode[i].byte_1 == firstChar) & (Unicode[i].byte_2 == secondChar) & (Unicode[i].byte_3 == thirdChar) & (Unicode[i].byte_4 == fourthChar);
+
+                if (compare == 1)
                     break;
-            }
-
-            //merge the two lists
-            size_a = size_list;
-
-            /* conditions ok if size_a and size_temp are 
-               not empty and "a" points to something
-            */
-           while((size_a > 0 && a) || size_temp > 0)
-           {
-               //if "a" is empty, element comes from temp
-               if(size_a == 0 || !a)
-               {
-                   element = temp;
-                   temp = temp->next;
-                   size_temp--;
-               }
-
-                    //if temp is empty, element comes from "a"
-                    else if(size_temp == 0)
-                    {
-                        element = a;
-                        a = a->next;
-                        size_a--;
-                    }
-
-                    //compare the frequencies of the lists
-                    else if(comparelist(temp, a) >= 0)
-                    {
-                        //first element of "a" is lower
-                        element = a;
-                        a = a->next;
-                        size_a--;
-                    }
-
-                        else
-                        {   
-                            //first element of temp is lower
-                            element = temp;
-                            temp = temp->next;
-                            size_temp--;
-                        }
-
-                //add the next element to list       
-                if(tail)
-                {
-                    tail->next = element;
-                }
-                    else
-                    {
-                        list = element;
-                    }
-                        tail = element;
-            }
-            
-            //"a" and temp done interating through list
-            temp = a;
-        }
-            
-            tail->next = NULL;
-
-            //for only one merge sort
-            if(merge_num <= 1)
-            {
-                return list;
-            }
-
-            size_list *= 2;
-    }
-}
-/* insert the array of bytes for a character to the linked list
-   counts the number of occurences of each character
-*/
-void insert_list(LinkedList **head, const char *to_insert)
-{
-        //if the linked list is null, then we see the 1st character 
-        if ((*head) == NULL) 
-        {
-            //allocate memory for the size of linked list
-            (*head) = (struct LinkedList*) malloc(sizeof(struct LinkedList *));
-
-            //set the next list to null in case it's populated
-            (*head)->next = NULL;
-
-            //set the frequency to 1 because it's the first instance
-            (*head)->frequency = 1;
-
-            //copy the character we have to the linked list's character
-            strcpy((*head)->c_arr, to_insert);      
-        } 
-
-            //if character is same then increment the occurence
-            else if(strcmp((*head)->c_arr, to_insert) == 0) 
-            {
-                (*head)->frequency++;
-            } 
-                else 
-                {
-                    /*recursion to keep going until we won't be receiving any more
-                      first byte of character
-                    */
-                    insert_list(&(*head)->next, to_insert);
-                }
-
-}
-
-/*while there are elements to head, print out the character with its
-  frequency. Then set it to next and keep repeating until head is null.
-*/
-void print_list(LinkedList *head) 
-{
-    while (head != NULL) 
-    {
-        printf("%s->%d\n", head->c_arr, head->frequency);
-        head = head->next;
-    }
-}
-
-
-int main(int argc, char *argv[])
-{
-  
-    //set first byte to 0
-    int byte = 0;
-
-    struct LinkedList *LinkedList = NULL;
-
-	//get the first byte of characters until it reaches EOF
-    while((byte = fgetc(stdin)) != EOF) 
-    {
-        //compare first byte to hex values to determine how many more bytes to read
-        int byte_exta = 0;
-
-        if (byte >= 0xF0) 
-        { 	
-            //the case for [11110]
-            byte_exta = 3;
-        } 
-        else if (byte >= 0xE0) 
-        {  
-            //the case for [1110]
-            byte_exta = 2;
-        } 
-        else if (byte >= 0xC0) 
-        {  
-            //the case for [110]
-            byte_exta = 1;
-        }						
-
-        //create an array to hold bytes
-        unsigned char arr_byte[5];
-
-        //pointer to the byte array
-        unsigned char *byte_pointer = arr_byte;
-
-		//byte pointer will hold the first byte
-        byte_pointer += sprintf(byte_pointer, "%c", byte);
-
-        //iterate through the number of byte_exta we have and set it to the pointer
-        for (int i = 0; i < byte_exta; ++i) 
-        {
-            byte = fgetc(stdin);
-
-			//byte pointer will now hold all the bytes for each character
-            byte_pointer += sprintf(byte_pointer, "%c", byte);
         }
 
-        //set the array of bytes to the linked list
-        insert_list(&LinkedList, arr_byte);
+        int i;
+        if (compare == 1)
+        //increases frequency of unicode character
+        Unicode[i].frequency++;
+
+        else 
+        {
+                //changes NULL values of unicode character
+                Unicode[count].frequency++;
+                if (result == 1)
+                    Unicode[count].byte_1 = firstChar;
+
+                if (result == 2) 
+                {
+                    Unicode[count].byte_1 = firstChar;
+                    Unicode[count].byte_2 = secondChar;
+                }
+
+                if (result == 3)
+                {
+                    Unicode[count].byte_1 = firstChar;
+                    Unicode[count].byte_2 = secondChar;
+                    Unicode[count].byte_3 = thirdChar;
+                }
+
+                if (result == 4)
+                {
+                    Unicode[count].byte_1 = firstChar;
+                    Unicode[count].byte_2 = secondChar;
+                    Unicode[count].byte_3 = thirdChar;
+                    Unicode[count].byte_4 = fourthChar;
+                }
+                Unicode[count].size = Unicode[count].byte_1 + Unicode[count].byte_2 + Unicode[count].byte_3 + Unicode[count].byte_4;
+                count++;
+        }
+
+        compare = 0;
+        firstChar = fgetc(stdin);
     }
 
-    //sort the list
-    struct LinkedList *list = sortlist(LinkedList);
+    qsort(Unicode, count, sizeof(UnicodeElement), swap);
 
-    //print the list
-    print_list(list);
-
-    //free the list
-    free(list);
-
-    return EXIT_SUCCESS;
-
+    //print out unicode character and the count
+    print(Unicode, count);
+    return 0;
 }
