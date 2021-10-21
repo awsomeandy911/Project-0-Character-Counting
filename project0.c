@@ -4,13 +4,13 @@
 #include <unistd.h>
 
 //maximum size of all unicode characters
-#define MAX_SIZE 11112064
+#define MAX_SIZE 1112064
 
 //struct that stores unicode objects
 struct UnicodeElement 
 {
-    //variables for size and frequency of unicode characters 
-    int size, frequency;
+    //variable for frequency of unicode characters 
+    int frequency;
 
     //variables for the bits of unicode characters
     unsigned char byte_1, byte_2, byte_3, byte_4;
@@ -64,7 +64,7 @@ void print(UnicodeElement element[], int size)
 int main(int argc, char **argv)
 {
     //struct that points to unicode objects
-    UnicodeElement *UnicodeArr = malloc(MAX_SIZE * sizeof(UnicodeElement));
+    UnicodeElement *UnicodeArr = malloc(sizeof(UnicodeElement) * MAX_SIZE);
 
     //varaiables to store 1st, 2nd, 3rd, and 4th byte of unicode characters
     unsigned char firstChar, secondChar, thirdChar, fourthChar;
