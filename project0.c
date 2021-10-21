@@ -13,7 +13,7 @@ struct UnicodeElement
     int frequency;
 
     //variables for the bits of unicode characters
-    unsigned char byte_1, byte_2, byte_3, byte_4;
+    unsigned char bytes[4];
 };
 typedef struct UnicodeElement UnicodeElement;
 
@@ -46,10 +46,10 @@ void print(UnicodeElement element[], int size)
         unsigned char arr[4];
         
         //copy array of Unicode array elements
-        arr[0] = element[i].byte_1;
-        arr[1] = element[i].byte_2;
-        arr[2] = element[i].byte_3;
-        arr[3] = element[i].byte_4;
+        arr[0] = element[i].bytes[0];
+        arr[1] = element[i].bytes[1];
+        arr[2] = element[i].bytes[2];
+        arr[3] = element[i].bytes[3];
 
         unsigned char *str = &arr[0];
 
@@ -63,148 +63,133 @@ void print(UnicodeElement element[], int size)
 
 int main(int argc, char **argv)
 {
-    //struct that points to unicode objects
-    UnicodeElement *UnicodeArr = malloc(sizeof(UnicodeElement) * MAX_SIZE);
+     
+    int emptyByte;
+    unsigned char arr[4];
 
-    //varaiables to store 1st, 2nd, 3rd, and 4th byte of unicode characters
-    unsigned char firstChar, secondChar, thirdChar, fourthChar;
-
-    //variable for intialization of empty byte
-    char emptyChar;
-
-    //set all values of Unicode array to 0 in memory
+    
+    UnicodeElement *UnicodeArr = (malloc(sizeof(UnicodeElement) * MAX_SIZE));
+    
+    
     memset(UnicodeArr, 0, sizeof(UnicodeArr));
 
-    //variable that stores the byte size result
-    int result;
+   
+    int count = 0;
 
-    //variable that acess struct elements from unicode and tracks count
-    int count = 1;
-
-    //varaiable that marks if character exists
+    
     int marker = 0;
+    
 
-    //gets first byte by reading first unicode character
-    emptyChar = fgetc(stdin);
+    
+    while((emptyByte = fgetc(stdin)) !=EOF) {
 
-    //get first bytes of characters until it reaches EOF
-    while(emptyChar != EOF)
-    {
-        //set empty character to first character
-        emptyChar = firstChar;
 
-        //read certain # of bits depending on four leading bits
-        if (firstChar < 192)
+      
+        int result = 0;
+
+            if (emptyByte >= 240)
+            { 		
+                result = 4;
+            } 
+            else if (emptyByte >= 224) 
+            {  
+                result = 3;
+            } 
+            else if (emptyByte >= 192) 
+            {  
+                result = 2;
+            }
+            else
+            {
+                result = 1;
+            }
+
+
+        
+        if(result == 4)
         {
-            result = 1;
+            arr[1] = (unsigned char)fgetc(stdin);
+            arr[2] = (unsigned char)fgetc(stdin);
+            arr[3] = (unsigned char)fgetc(stdin);
         }
-        else if (firstChar >= 192 & firstChar < 224)
+        else if(result == 3)
         {
-            result = 2;
-            //if bit size is 2, read 2nd unicode character
-            secondChar = (unsigned char)fgetc(stdin);
-        }
-        else if (firstChar >= 224 & firstChar < 240)
+            arr[1] = (unsigned char)fgetc(stdin);
+            arr[2] = (unsigned char)fgetc(stdin);
+        }else if(result == 2)
         {
-            result = 3;
-            //if bit size is 3, read 2nd & 3rd unicode character
-            secondChar = (unsigned char)fgetc(stdin);
-            thirdChar = (unsigned char)fgetc(stdin);
-        }
-        else if (firstChar >= 240)
-        {
-            result = 4;
-            //if bit size is 4, read 2nd, 3rd, & 4th unicode character
-            secondChar = (unsigned char)fgetc(stdin);
-            thirdChar = (unsigned char)fgetc(stdin);
-            fourthChar = (unsigned char)fgetc(stdin);
+            arr[1] = (unsigned char)fgetc(stdin);
         }
 
-         int i;
+      
+        int i;
+        marker = 0; 
+        
 
-        //check to see if given unicode was already read in or not
         for(i = 0; i < count; i++)
         {
-            //uses bitwise operators to check the byte correctness
-            //if it matches all conditons it'll equal 1
-           if((result == 1) && (firstChar == UnicodeArr[i].byte_1))
-           {
-               UnicodeArr[i].frequency += 1;
-               marker = 1;
-               break;
-           }
-           else if((result == 2) && (firstChar == UnicodeArr[i].byte_1) && (secondChar == UnicodeArr[i].byte_2))
-           {
-               UnicodeArr[i].frequency += 1;
-               marker = 1;
-               break;
-           }
-           else if((result == 3) && (firstChar == UnicodeArr[i].byte_1) && (secondChar == UnicodeArr[i].byte_2) &&
-                           (thirdChar == UnicodeArr[i].byte_3))
-           {
-               UnicodeArr[i].frequency += 1;
-               marker = 1;
-               break;
-           }
-           else if((result == 4) && (firstChar == UnicodeArr[i].byte_1) && (secondChar == UnicodeArr[i].byte_2) &&
-                            (thirdChar == UnicodeArr[i].byte_3) && (fourthChar == UnicodeArr[i].byte_4))
-           {
-               UnicodeArr[i].frequency += 1;
-               marker = 1;
-               break;
-           }
-           else
-           {
-               i++;
-           }
 
-        }
-
-       
-       
-        //if character is not found in the array, add it and increase count by one
-        if(marker = 0)
-        {
-            UnicodeArr[count].frequency++;
             
-                if (result == 1)
-                {
-                    UnicodeArr[count].byte_1 = (unsigned char)firstChar;
+            if(result == 4)
+            {
+                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) 
+                & (UnicodeArr[i].bytes[1] ==  arr[1])
+                & (UnicodeArr[i].bytes[2] ==  arr[2]) 
+                & (UnicodeArr[i].bytes[3] ==  arr[3]);
+            }
+            else if(result == 3)
+            {
+                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) 
+                & (UnicodeArr[i].bytes[1] ==  arr[1]) 
+                & (UnicodeArr[i].bytes[2] == arr[2]);
+            }
+            else if(result == 2)
+            {
+                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) 
+                & (UnicodeArr[i].bytes[1] == arr[1]);
+            }
+            else
+            {
+                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte);
+            }
 
-                    UnicodeArr[i].frequency += 1;
-                }
-                else if (result == 2) 
-                {
-                    UnicodeArr[count].byte_1 = (unsigned char)firstChar;
-                    UnicodeArr[count].byte_2 = (unsigned char)secondChar;
-
-                    UnicodeArr[i].frequency += 1;
-                }
-
-                else if (result == 3)
-                {
-                    UnicodeArr[count].byte_1 = (unsigned char)firstChar;
-                    UnicodeArr[count].byte_2 = (unsigned char)secondChar;
-                    UnicodeArr[count].byte_3 = (unsigned char)thirdChar;
-
-                    UnicodeArr[i].frequency += 1;
-                }
-
-                else if (result == 4)
-                {
-                    UnicodeArr[i].byte_1 = (unsigned char)firstChar;
-                    UnicodeArr[i].byte_2 = (unsigned char)secondChar;
-                    UnicodeArr[i].byte_3 = (unsigned char)thirdChar;
-                    UnicodeArr[i].byte_4 = (unsigned char)fourthChar;
-
-                    UnicodeArr[i].frequency += 1;
-                }
-                
-                count++;
+            
+            if(marker == 1)
+            {
+                UnicodeArr[i].frequency++;
+                break;
+            }
         }
 
         
-        emptyChar = fgetc(stdin);
+        if(marker == 0)
+        {
+            UnicodeArr[count].frequency++;
+            if(result == 1)
+            {
+                UnicodeArr[count].bytes[0] = emptyByte;
+            }
+            if(result == 2)
+            {
+                UnicodeArr[count].bytes[0] = (unsigned char) emptyByte;
+                UnicodeArr[count].bytes[1] = arr[1];
+            }
+            if(result == 3)
+            {
+                UnicodeArr[count].bytes[0] = (unsigned char) emptyByte;
+                UnicodeArr[count].bytes[1] = arr[1];
+                UnicodeArr[count].bytes[2] = arr[2];
+            }
+            if(result == 4)
+            {
+                UnicodeArr[count].bytes[0] = (unsigned char) emptyByte;
+                UnicodeArr[count].bytes[1] = arr[1];
+                UnicodeArr[count].bytes[2] = arr[2];
+                UnicodeArr[count].bytes[3] = arr[3];
+            }
+           
+            count++;
+        }
     }
 
     //quick sort function 
