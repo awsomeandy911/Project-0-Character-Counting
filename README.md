@@ -6,6 +6,7 @@ Andy Le
 #Build
 Command "make all" will run the code in project0.c
 Command "make clean" will clear any executables generated.
+Command "cat testfile.txt|./project0" will tests inputs in project0.c.
 
 #Functions
 compareList - function that compares the lists frequency
