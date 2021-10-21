@@ -83,13 +83,17 @@ int main(int argc, char **argv)
 
     //varaiable that marks if character exists
     int marker = 0;
-    
-    while((emptyByte = fgetc(stdin)) !=EOF) 
-    {
-        //variable that stores the byte size result
-        int result = 0;
 
-           //checker to see what kind of bytes it is
+    //variable that stores the byte size result
+    int result = 0;
+
+    //gets first byte by reading first unicode character
+    emptyByte = fgetc(stdin);
+    
+    //get first bytes of characters until it reaches EOF
+    while(emptyByte != EOF) 
+    {
+            //checker to see what kind of bytes it is
             if (emptyByte >= 240)
             { 		
                 result = 4;
@@ -112,6 +116,7 @@ int main(int argc, char **argv)
             {
                 result = 1;
             }
+
         
         //check to see if given unicode was already read in or not
         for(int i = 0; i < count; i++)
