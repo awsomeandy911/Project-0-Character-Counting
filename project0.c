@@ -14,8 +14,7 @@ struct UnicodeElement
 
     //variables for the bits of unicode characters in an character array
     unsigned char bytes[4];
-};
-
+}; typedef struct UnicodeElement UnicodeElement;
 
 //swap function that is used by built-in c function (quick sort)
 int swap(const void *X, const void *Y)
@@ -64,7 +63,7 @@ void print(struct UnicodeElement element[], int size)
 int main(int argc, char **argv)
 {
     //struct that points to unicode objects
-    struct UnicodeElement *UnicodeArr = (malloc(MAX_SIZE * sizeof(struct UnicodeElement)));
+    UnicodeElement *UnicodeArr = (malloc(MAX_SIZE * sizeof(UnicodeElement)));
 
     //variable for intialization of empty byte
     int emptyByte;
@@ -80,6 +79,9 @@ int main(int argc, char **argv)
 
     //variable that stores the byte size result
     int result = 0;
+
+    //varaiable that marks if character exists
+    int marker = 0;
         
     //gets first byte by reading first unicode character
     emptyByte = fgetc(stdin);
@@ -87,7 +89,9 @@ int main(int argc, char **argv)
     //get first bytes of characters until it reaches EOF
     while(emptyByte !=EOF) 
     {
-
+        //initialize result to 0 in loop
+        result = 0;
+        
             //checker to see what kind of bytes it is
             if (emptyByte >= 240)
             { 		
@@ -109,27 +113,31 @@ int main(int argc, char **argv)
                 result = 1;
             }
 
-             if(result == 4)
+            //read next bytes in character array
+            if(result == 4)
             {
-            arr[1] = (unsigned char)fgetc(stdin);
-            arr[2] = (unsigned char)fgetc(stdin);
-            arr[3] = (unsigned char)fgetc(stdin);
-             }
-        else if(result == 3)
-        {
-            arr[1] = (unsigned char)fgetc(stdin);
-            arr[2] = (unsigned char)fgetc(stdin);
-        }else if(result == 2)
-        {
-            arr[1] = (unsigned char)fgetc(stdin);
-        }
+                arr[1] = (unsigned char)fgetc(stdin);
+                arr[2] = (unsigned char)fgetc(stdin);
+                arr[3] = (unsigned char)fgetc(stdin);
+            }
+
+            else if(result == 3)
+            {
+                arr[1] = (unsigned char)fgetc(stdin);
+                arr[2] = (unsigned char)fgetc(stdin);
+            }
+
+            else if(result == 2)
+            {
+                arr[1] = (unsigned char)fgetc(stdin);
+            }
         
         
         //varaible for the index used in loops
         int i;
 
-        //varaiable that marks if character exists
-        int marker = 0;
+        //initialize marker to 0 in loop
+        marker = 0;
 
         //check to see if given unicode was already read in or not
         for(i = 0; i < count; i++)
@@ -138,8 +146,7 @@ int main(int argc, char **argv)
             //if it matches all conditons it'll equal 1
             if(result == 4)
             {
-                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) & (UnicodeArr[i].bytes[1] ==  arr[1]) & (UnicodeArr[i].bytes[2] ==  arr[2]) 
-                                                                & (UnicodeArr[i].bytes[3] ==  arr[3]);
+                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) & (UnicodeArr[i].bytes[1] ==  arr[1]) & (UnicodeArr[i].bytes[2] ==  arr[2]) & (UnicodeArr[i].bytes[3] ==  arr[3]);
             }
             else if(result == 3)
             {
@@ -199,8 +206,8 @@ int main(int argc, char **argv)
         }
     }
 
-    //quick sort function 
-    qsort(UnicodeArr, count, sizeof(struct UnicodeElement), swap);
+    //quick sort built in c function
+    qsort(UnicodeArr, count, sizeof(UnicodeElement), swap);
 
     //print out unicode character and the count
     print(UnicodeArr, count);
