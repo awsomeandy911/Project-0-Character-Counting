@@ -123,7 +123,7 @@ int main(int argc, char **argv)
          int i;
 
         //check to see if given unicode was already read in or not
-        while(i < count)
+        for(i = 0; i < count; i++)
         {
             //uses bitwise operators to check the byte correctness
             //if it matches all conditons it'll equal 1
@@ -162,11 +162,9 @@ int main(int argc, char **argv)
 
        
        
-
+        //if character is not found in the array, add it and increase count by one
         if(marker = 0)
         {
-                //changes NULL values of unicode character
-                UnicodeArr[count].frequency++;
                 if (result == 1)
                 {
                     UnicodeArr[count].byte_1 = (unsigned char)firstChar;
