@@ -95,22 +95,22 @@ int main(int argc, char **argv)
         {
             result = 2;
             //if bit size is 2, read 2nd unicode character
-            secondChar = (unsigned char)fget(stdin);
+            secondChar = (unsigned char)fgetc(stdin);
         }
         else if (firstChar >= 224 & firstChar < 240)
         {
             result = 3;
             //if bit size is 3, read 2nd & 3rd unicode character
-            secondChar = (unsigned char)fget(stdin);
-            thirdChar = (unsigned char)fget(stdin);
+            secondChar = (unsigned char)fgetc(stdin);
+            thirdChar = (unsigned char)fgetc(stdin);
         }
         else if (firstChar >= 240)
         {
             result = 4;
             //if bit size is 4, read 2nd, 3rd, & 4th unicode character
-            secondChar = (unsigned char)fget(stdin);
-            thirdChar = (unsigned char)fget(stdin);
-            fourthChar = (unsigned char)fget(stdin);
+            secondChar = (unsigned char)fgetc(stdin);
+            thirdChar = (unsigned char)fgetc(stdin);
+            fourthChar = (unsigned char)fgetc(stdin);
         }
 
          int i;
