@@ -83,9 +83,6 @@ int main(int argc, char **argv)
 
     //varaiable that marks if character exists
     int marker = 0;
-
-    //gets first byte by reading first unicode character
-    emptyByte = fgetc(stdin);
     
     //get first bytes of characters until it reaches EOF
     while((emptyByte = fgetc(stdin)) != EOF) 
