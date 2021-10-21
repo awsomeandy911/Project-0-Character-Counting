@@ -18,7 +18,7 @@ struct UnicodeElement
 typedef struct UnicodeElement UnicodeElement;
 
 //swap function that is used by built-in c function (quick sort)
-void swap(const void *X, const void *Y)
+int swap(const void *X, const void *Y)
 {
     int xCount, yCount;
 
