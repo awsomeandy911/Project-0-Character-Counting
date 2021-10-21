@@ -89,40 +89,29 @@ int main(int argc, char **argv)
         //variable that stores the byte size result
         int result = 0;
 
-            //checker to see what kind of bytes it is
+           //checker to see what kind of bytes it is
             if (emptyByte >= 240)
             { 		
                 result = 4;
+                arr[1] = (unsigned char)fgetc(stdin);
+                arr[2] = (unsigned char)fgetc(stdin);
+                arr[3] = (unsigned char)fgetc(stdin);
             } 
             else if (emptyByte >= 224) 
             {  
                 result = 3;
+                arr[1] = (unsigned char)fgetc(stdin);
+                arr[2] = (unsigned char)fgetc(stdin);
             } 
             else if (emptyByte >= 192) 
             {  
                 result = 2;
+                arr[1] = (unsigned char)fgetc(stdin);
             }
             else
             {
                 result = 1;
             }
-
-        //read next bytes in character array
-        if(result == 4)
-        {
-            arr[1] = (unsigned char)fgetc(stdin);
-            arr[2] = (unsigned char)fgetc(stdin);
-            arr[3] = (unsigned char)fgetc(stdin);
-        }
-        else if(result == 3)
-        {
-            arr[1] = (unsigned char)fgetc(stdin);
-            arr[2] = (unsigned char)fgetc(stdin);
-        }
-        else if(result == 2)
-        {
-            arr[1] = (unsigned char)fgetc(stdin);
-        }
 
         //initialize marker to 0 inside while loop
         marker = 0; 
