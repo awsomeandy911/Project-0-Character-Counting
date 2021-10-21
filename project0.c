@@ -12,7 +12,7 @@ struct UnicodeElement
     //variable for frequency of unicode characters 
     int frequency;
 
-    //variables for the bits of unicode characters
+    //variables for the bits of unicode characters in an character array
     unsigned char bytes[4];
 };
 typedef struct UnicodeElement UnicodeElement;
@@ -63,67 +63,59 @@ void print(UnicodeElement element[], int size)
 
 int main(int argc, char **argv)
 {
-     
-    int emptyByte;
-    unsigned char arr[4];
-
-    
+    //struct that points to unicode objects
     UnicodeElement *UnicodeArr = (malloc(sizeof(UnicodeElement) * MAX_SIZE));
+
+    //variable for intialization of empty byte
+    int emptyByte;
+
+    //varaible for bytes in a chacter array
+    unsigned char arr[4];
     
-    
+    //set all values of Unicode array to 0 in memory
     memset(UnicodeArr, 0, sizeof(UnicodeArr));
 
-   
+   //variable that acess struct elements from unicode and tracks count
     int count = 0;
 
-    
+    //varaiable that marks if character exists
     int marker = 0;
+
+    //variable that stores the byte size result
+    int result = 0;
     
-
+    //varaible for the index used in loops
+    int i;
     
-    while((emptyByte = fgetc(stdin)) !=EOF) {
+    //gets first byte by reading first unicode character
+    emptyByte = fgetc(stdin);
 
-
-      
-        int result = 0;
+    //get first bytes of characters until it reaches EOF
+    while(emptyByte !=EOF) 
+    {
 
             if (emptyByte >= 240)
             { 		
                 result = 4;
+                arr[1] = (unsigned char)fgetc(stdin);
+                arr[2] = (unsigned char)fgetc(stdin);
+                arr[3] = (unsigned char)fgetc(stdin);
             } 
             else if (emptyByte >= 224) 
             {  
                 result = 3;
+                arr[1] = (unsigned char)fgetc(stdin);
+                arr[2] = (unsigned char)fgetc(stdin);
             } 
             else if (emptyByte >= 192) 
             {  
                 result = 2;
+                arr[1] = (unsigned char)fgetc(stdin);
             }
             else
             {
                 result = 1;
             }
-
-
-        
-        if(result == 4)
-        {
-            arr[1] = (unsigned char)fgetc(stdin);
-            arr[2] = (unsigned char)fgetc(stdin);
-            arr[3] = (unsigned char)fgetc(stdin);
-        }
-        else if(result == 3)
-        {
-            arr[1] = (unsigned char)fgetc(stdin);
-            arr[2] = (unsigned char)fgetc(stdin);
-        }else if(result == 2)
-        {
-            arr[1] = (unsigned char)fgetc(stdin);
-        }
-
-      
-        int i;
-        marker = 0; 
         
 
         for(i = 0; i < count; i++)
@@ -132,28 +124,22 @@ int main(int argc, char **argv)
             
             if(result == 4)
             {
-                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) 
-                & (UnicodeArr[i].bytes[1] ==  arr[1])
-                & (UnicodeArr[i].bytes[2] ==  arr[2]) 
-                & (UnicodeArr[i].bytes[3] ==  arr[3]);
+                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) & (UnicodeArr[i].bytes[1] ==  arr[1]) & (UnicodeArr[i].bytes[2] ==  arr[2]) 
+                                                                & (UnicodeArr[i].bytes[3] ==  arr[3]);
             }
             else if(result == 3)
             {
-                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) 
-                & (UnicodeArr[i].bytes[1] ==  arr[1]) 
-                & (UnicodeArr[i].bytes[2] == arr[2]);
+                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) & (UnicodeArr[i].bytes[1] ==  arr[1]) & (UnicodeArr[i].bytes[2] == arr[2]);
             }
             else if(result == 2)
             {
-                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) 
-                & (UnicodeArr[i].bytes[1] == arr[1]);
+                marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) & (UnicodeArr[i].bytes[1] == arr[1]);
             }
             else
             {
                 marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte);
             }
 
-            
             if(marker == 1)
             {
                 UnicodeArr[i].frequency++;
@@ -165,6 +151,7 @@ int main(int argc, char **argv)
         if(marker == 0)
         {
             UnicodeArr[count].frequency++;
+
             if(result == 1)
             {
                 UnicodeArr[count].bytes[0] = emptyByte;
@@ -188,6 +175,7 @@ int main(int argc, char **argv)
                 UnicodeArr[count].bytes[3] = arr[3];
             }
            
+           //increment by 1 to the count of characters in character array
             count++;
         }
     }
