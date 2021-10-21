@@ -123,7 +123,7 @@ int main(int argc, char **argv)
          int i;
 
         //check to see if given unicode was already read in or not
-        for(i = 0; i < count; i++)
+        while(i < count)
         {
             //uses bitwise operators to check the byte correctness
             //if it matches all conditons it'll equal 1
