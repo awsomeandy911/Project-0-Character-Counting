@@ -139,7 +139,7 @@ int main(int argc, char **argv)
                marker = 1;
                break;
            }
-           else if((result == 4) && (firstChar == UnicodeArr[i].byte_1) && (secondChar == UnicodeArr[i].byte_2)
+           else if((result == 4) && (firstChar == UnicodeArr[i].byte_1) && (secondChar == UnicodeArr[i].byte_2) &&
                             (thirdChar == UnicodeArr[i].byte_3) && (fourthChar == UnicodeArr[i].byte_4))
            {
                UnicodeArr[i].frequency += 1;
