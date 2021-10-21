@@ -112,9 +112,6 @@ int main(int argc, char **argv)
             {
                 result = 1;
             }
-
-        //initialize marker to 0 inside while loop
-        marker = 0; 
         
         //check to see if given unicode was already read in or not
         for(int i = 0; i < count; i++)
