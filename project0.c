@@ -165,6 +165,8 @@ int main(int argc, char **argv)
         //if character is not found in the array, add it and increase count by one
         if(marker = 0)
         {
+            UnicodeArr[count].frequency++;
+            
                 if (result == 1)
                 {
                     UnicodeArr[count].byte_1 = (unsigned char)firstChar;
