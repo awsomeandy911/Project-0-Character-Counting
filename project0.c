@@ -42,9 +42,10 @@ void print(struct UnicodeElement element[], int size)
     //prints out unicode object values
     for (int i  = 0; i < size; i++)
     {
+        //byte array
         unsigned char arr[4];
         
-        //copy array of UnicodeArr elements
+        //copy array of Unicode array elements
         arr[0] = element[i].byte_1;
         arr[1] = element[i].byte_2;
         arr[2] = element[i].byte_3;
@@ -68,6 +69,9 @@ int main(int argc, char **argv)
     //varaiables to store 1st, 2nd, 3rd, and 4th byte of unicode characters
     unsigned char firstChar, secondChar, thirdChar, fourthChar;
 
+    //variable for intialization of empty byte
+    char emptyChar;
+
     //set all values of Unicode array to 0 in memory
     memset(UnicodeArr, 0, sizeof(UnicodeArr));
 
@@ -81,11 +85,14 @@ int main(int argc, char **argv)
     int marker = 0;
 
     //gets first byte by reading first unicode character
-    firstChar = fgetc(stdin);
+    emptyChar = fgetc(stdin);
 
     //get first bytes of characters until it reaches EOF
-    while(firstChar != EOF)
+    while(emptyChar != EOF)
     {
+        //set empty character to first character
+        emptyChar = firstChar;
+
         //read certain # of bits depending on four leading bits
         if (firstChar < 192)
         {
@@ -205,5 +212,6 @@ int main(int argc, char **argv)
 
     //print out unicode character and the count
     print(UnicodeArr, count);
+    
     return 0;
 }
