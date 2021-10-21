@@ -15,8 +15,7 @@ struct UnicodeElement
     //variable for frequency of unicode characters 
     int frequency;
 
-};
-typedef struct UnicodeElement UnicodeElement;
+};typedef struct UnicodeElement UnicodeElement;
 
 //swap function that is used by built-in c function (quick sort)
 int swap(const void *X, const void *Y)
