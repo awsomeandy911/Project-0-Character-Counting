@@ -64,7 +64,7 @@ void print(struct UnicodeElement element[], int size)
 int main(int argc, char **argv)
 {
     //struct that points to unicode objects
-    struct UnicodeElement *UnicodeArr = malloc(MAX_SIZE * sizeof(struct UnicodeElement));
+    struct UnicodeElement *UnicodeArr = malloc(MAX_SIZE * sizeof(UnicodeElement));
 
     //varaiables to store 1st, 2nd, 3rd, and 4th byte of unicode characters
     unsigned char firstChar, secondChar, thirdChar, fourthChar;
