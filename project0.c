@@ -202,7 +202,7 @@ int main(int argc, char **argv)
         }
 
         
-        firstChar = fgetc(stdin);
+        emptyChar = fgetc(stdin);
     }
 
     //quick sort function 
