@@ -9,11 +9,12 @@
 //struct that stores unicode objects
 struct UnicodeElement 
 {
+    //variable for the bits of unicode characters
+    unsigned char bytes[4];
+
     //variable for frequency of unicode characters 
     int frequency;
 
-    //variables for the bits of unicode characters
-    unsigned char bytes[4];
 };
 typedef struct UnicodeElement UnicodeElement;
 
@@ -74,7 +75,7 @@ int main(int argc, char **argv)
     //varaible for bytes in a chacter array
     unsigned char arr[4];
     
-    //built in c fucntion that sets all values of array to 0 in the memory
+    //built in c function that sets all values of array to 0 in the memory
     memset(UnicodeArr, 0, sizeof(UnicodeArr));
 
     //variable that acess struct elements from unicode and tracks count
@@ -123,8 +124,6 @@ int main(int argc, char **argv)
             arr[1] = (unsigned char)fgetc(stdin);
         }
 
-        //varaible for the index used in loops
-        //int i;
         //initialize marker to 0 inside while loop
         marker = 0; 
         
@@ -154,7 +153,7 @@ int main(int argc, char **argv)
             if(marker == 1)
             {
                 UnicodeArr[i].frequency++;
-                break;
+                                            break;
             }
         }
 
@@ -196,7 +195,7 @@ int main(int argc, char **argv)
         }
     }
 
-    //quick sort function 
+    //built in c function quick sort, that sorts out all unicode characters
     qsort(UnicodeArr, count, sizeof(UnicodeElement), swap);
 
     //print out unicode character and the count
