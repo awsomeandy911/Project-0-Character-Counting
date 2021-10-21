@@ -88,28 +88,41 @@ int main(int argc, char **argv)
     while(emptyByte !=EOF) 
     {
 
+            //checker to see what kind of bytes it is
             if (emptyByte >= 240)
             { 		
                 result = 4;
-                arr[1] = (unsigned char)fgetc(stdin);
-                arr[2] = (unsigned char)fgetc(stdin);
-                arr[3] = (unsigned char)fgetc(stdin);
+             
             } 
             else if (emptyByte >= 224) 
             {  
                 result = 3;
-                arr[1] = (unsigned char)fgetc(stdin);
-                arr[2] = (unsigned char)fgetc(stdin);
+              
             } 
             else if (emptyByte >= 192) 
             {  
                 result = 2;
-                arr[1] = (unsigned char)fgetc(stdin);
+                
             }
             else
             {
                 result = 1;
             }
+
+             if(result == 4)
+            {
+            arr[1] = (unsigned char)fgetc(stdin);
+            arr[2] = (unsigned char)fgetc(stdin);
+            arr[3] = (unsigned char)fgetc(stdin);
+             }
+        else if(result == 3)
+        {
+            arr[1] = (unsigned char)fgetc(stdin);
+            arr[2] = (unsigned char)fgetc(stdin);
+        }else if(result == 2)
+        {
+            arr[1] = (unsigned char)fgetc(stdin);
+        }
         
         
         //varaible for the index used in loops
@@ -118,9 +131,11 @@ int main(int argc, char **argv)
         //varaiable that marks if character exists
         int marker = 0;
 
+        //check to see if given unicode was already read in or not
         for(i = 0; i < count; i++)
         {
-
+            //uses bitwise operators to check the byte correctness
+            //if it matches all conditons it'll equal 1
             if(result == 4)
             {
                 marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) & (UnicodeArr[i].bytes[1] ==  arr[1]) & (UnicodeArr[i].bytes[2] ==  arr[2]) 
@@ -139,6 +154,7 @@ int main(int argc, char **argv)
                 marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte);
             }
 
+            //break if character is found in array
             if(marker == 1)
             {
                 UnicodeArr[i].frequency++;
@@ -146,9 +162,10 @@ int main(int argc, char **argv)
             }
         }
 
-        
+        //if character is not found in array, add it and increase count by 1
         if(marker == 0)
         {
+            //increment pointer by amount of characters
             UnicodeArr[count].frequency++;
 
             if(result == 1)
@@ -158,23 +175,26 @@ int main(int argc, char **argv)
             if(result == 2)
             {
                 UnicodeArr[count].bytes[0] = (unsigned char) emptyByte;
+
                 UnicodeArr[count].bytes[1] = arr[1];
             }
             if(result == 3)
             {
                 UnicodeArr[count].bytes[0] = (unsigned char) emptyByte;
+
                 UnicodeArr[count].bytes[1] = arr[1];
                 UnicodeArr[count].bytes[2] = arr[2];
             }
             if(result == 4)
             {
                 UnicodeArr[count].bytes[0] = (unsigned char) emptyByte;
+
                 UnicodeArr[count].bytes[1] = arr[1];
                 UnicodeArr[count].bytes[2] = arr[2];
                 UnicodeArr[count].bytes[3] = arr[3];
             }
            
-           //increment by 1 to the count of characters in character array
+           //increment count by 1
             count++;
         }
     }
