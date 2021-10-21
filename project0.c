@@ -12,18 +12,19 @@ struct UnicodeElement
     //variable for frequency of unicode characters 
     int frequency;
 
-    //variables for the bits of unicode characters in an character array
+    //variables for the bits of unicode characters
     unsigned char bytes[4];
-
-}; typedef struct UnicodeElement UnicodeElement;
+};
+typedef struct UnicodeElement UnicodeElement;
 
 //swap function that is used by built-in c function (quick sort)
 int swap(const void *X, const void *Y)
 {
     int xCount, yCount;
 
-    xCount = ((struct UnicodeElement *)X)->frequency;
-    yCount = ((struct UnicodeElement *)Y)->frequency;
+    //compares the two counts to the frequency of characters
+    xCount = ((UnicodeElement *)X)->frequency;
+    yCount = ((UnicodeElement *)Y)->frequency;
 
     if(yCount > xCount)
     {
@@ -37,7 +38,7 @@ int swap(const void *X, const void *Y)
 }
 
 //prints and sorts out unicode characters
-void print(struct UnicodeElement element[], int size)
+void print(UnicodeElement element[], int size)
 {
     //prints out unicode object values
     for (int i  = 0; i < size; i++)
@@ -63,6 +64,7 @@ void print(struct UnicodeElement element[], int size)
 
 int main(int argc, char **argv)
 {
+    
     //struct that points to unicode objects
     UnicodeElement *UnicodeArr = (malloc(MAX_SIZE * sizeof(UnicodeElement)));
 
@@ -75,29 +77,21 @@ int main(int argc, char **argv)
     //built in c fucntion that sets all values of array to 0 in the memory
     memset(UnicodeArr, 0, sizeof(UnicodeArr));
 
-   //variable that acess struct elements from unicode and tracks count
+    //variable that acess struct elements from unicode and tracks count
     int count = 0;
-
-    //variable that stores the byte size result
-    int result = 0;
 
     //varaiable that marks if character exists
     int marker = 0;
-        
-    //gets first byte by reading first unicode character
-    emptyByte = fgetc(stdin);
-
-    //get first bytes of characters until it reaches EOF
-    while(emptyByte != EOF) 
+    
+    while((emptyByte = fgetc(stdin)) !=EOF) 
     {
-        //initialize result to 0 in loop
-        result = 0;
-        
+        //variable that stores the byte size result
+        int result = 0;
+
             //checker to see what kind of bytes it is
             if (emptyByte >= 240)
             { 		
                 result = 4;
-             
             } 
             else if (emptyByte >= 224) 
             {  
@@ -112,37 +106,33 @@ int main(int argc, char **argv)
                 result = 1;
             }
 
-            //read next bytes in character array
-            if(result == 4)
-            {
-                arr[1] = (unsigned char)fgetc(stdin);
-                arr[2] = (unsigned char)fgetc(stdin);
-                arr[3] = (unsigned char)fgetc(stdin);
-            }
-
-            else if(result == 3)
-            {
-                arr[1] = (unsigned char)fgetc(stdin);
-                arr[2] = (unsigned char)fgetc(stdin);
-            }
-
-            else if(result == 2)
-            {
-                arr[1] = (unsigned char)fgetc(stdin);
-            }
-        
-        
-        //varaible for the index used in loops
-        int i;
-
-        //initialize marker to 0 in loop
-        marker = 0;
-
-        //check to see if given unicode was already read in or not
-        for(i = 0; i < count; i++)
+        //read next bytes in character array
+        if(result == 4)
         {
+            arr[1] = (unsigned char)fgetc(stdin);
+            arr[2] = (unsigned char)fgetc(stdin);
+            arr[3] = (unsigned char)fgetc(stdin);
+        }
+        else if(result == 3)
+        {
+            arr[1] = (unsigned char)fgetc(stdin);
+            arr[2] = (unsigned char)fgetc(stdin);
+        }
+        else if(result == 2)
+        {
+            arr[1] = (unsigned char)fgetc(stdin);
+        }
+
+        //varaible for the index used in loops
+        //int i;
+        //initialize marker to 0 inside while loop
+        marker = 0; 
+        
+        //check to see if given unicode was already read in or not
+        for(int i = 0; i < count; i++)
+        {
+
             //uses bitwise operators to check the byte correctness
-            //if it matches all conditons it'll equal 1
             if(result == 4)
             {
                 marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) & (UnicodeArr[i].bytes[1] ==  arr[1]) & (UnicodeArr[i].bytes[2] ==  arr[2]) & (UnicodeArr[i].bytes[3] ==  arr[3]);
@@ -176,36 +166,37 @@ int main(int argc, char **argv)
 
             if(result == 1)
             {
+                //case for result 1 means 1 byte
                 UnicodeArr[count].bytes[0] = emptyByte;
             }
             if(result == 2)
             {
+                //case for result 2 means 2 bytes
                 UnicodeArr[count].bytes[0] = (unsigned char) emptyByte;
-
                 UnicodeArr[count].bytes[1] = arr[1];
             }
             if(result == 3)
             {
+                //case for result 3 means 3 bytes
                 UnicodeArr[count].bytes[0] = (unsigned char) emptyByte;
-
                 UnicodeArr[count].bytes[1] = arr[1];
                 UnicodeArr[count].bytes[2] = arr[2];
             }
             if(result == 4)
             {
+                //case for result 4 means 4 bytes
                 UnicodeArr[count].bytes[0] = (unsigned char) emptyByte;
-
                 UnicodeArr[count].bytes[1] = arr[1];
                 UnicodeArr[count].bytes[2] = arr[2];
                 UnicodeArr[count].bytes[3] = arr[3];
             }
-           
-           //increment count of characters by 1
+
+           //increment count by 1
             count++;
         }
     }
 
-    //quick sort built in c function
+    //quick sort function 
     qsort(UnicodeArr, count, sizeof(UnicodeElement), swap);
 
     //print out unicode character and the count
