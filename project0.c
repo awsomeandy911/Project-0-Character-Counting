@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 //maximum size of all unicode characters
-#define MAX_SIZE 1112064
+#define MAX_SIZE 11112064
 
 //struct that stores unicode objects
 struct UnicodeElement 
@@ -75,8 +75,8 @@ int main(int argc, char **argv)
     //set all values of Unicode array to 0 in memory
     memset(UnicodeArr, 0, sizeof(UnicodeArr));
 
-    //variable that stores the byte size result and variable i so loop can start at 0
-    int result, i;
+    //variable that stores the byte size result
+    int result;
 
     //variable that acess struct elements from unicode and tracks count
     int count = 1;
@@ -94,13 +94,15 @@ int main(int argc, char **argv)
         emptyChar = firstChar;
 
         //read certain # of bits depending on four leading bits
-        if (firstChar >= 240)
+        if (firstChar < 192)
         {
-            result = 4;
-            //if bit size is 4, read 2nd, 3rd, & 4th unicode character
+            result = 1;
+        }
+        else if (firstChar >= 192 & firstChar < 224)
+        {
+            result = 2;
+            //if bit size is 2, read 2nd unicode character
             secondChar = (unsigned char)fgetc(stdin);
-            thirdChar = (unsigned char)fgetc(stdin);
-            fourthChar = (unsigned char)fgetc(stdin);
         }
         else if (firstChar >= 224 & firstChar < 240)
         {
@@ -109,25 +111,29 @@ int main(int argc, char **argv)
             secondChar = (unsigned char)fgetc(stdin);
             thirdChar = (unsigned char)fgetc(stdin);
         }
-         else if (firstChar >= 192 & firstChar < 224)
+        else if (firstChar >= 240)
         {
-            result = 2;
-            //if bit size is 2, read 2nd unicode character
+            result = 4;
+            //if bit size is 4, read 2nd, 3rd, & 4th unicode character
             secondChar = (unsigned char)fgetc(stdin);
-        }
-        else
-        {
-            result = 1;
+            thirdChar = (unsigned char)fgetc(stdin);
+            fourthChar = (unsigned char)fgetc(stdin);
         }
 
+         int i;
 
         //check to see if given unicode was already read in or not
         for(i = 0; i < count; i++)
         {
             //uses bitwise operators to check the byte correctness
             //if it matches all conditons it'll equal 1
-           if((result == 4) && (firstChar == UnicodeArr[i].byte_1) && (secondChar == UnicodeArr[i].byte_2) &&
-                            (thirdChar == UnicodeArr[i].byte_3) && (fourthChar == UnicodeArr[i].byte_4))
+           if((result == 1) && (firstChar == UnicodeArr[i].byte_1))
+           {
+               UnicodeArr[i].frequency += 1;
+               marker = 1;
+               break;
+           }
+           else if((result == 2) && (firstChar == UnicodeArr[i].byte_1) && (secondChar == UnicodeArr[i].byte_2))
            {
                UnicodeArr[i].frequency += 1;
                marker = 1;
@@ -140,13 +146,8 @@ int main(int argc, char **argv)
                marker = 1;
                break;
            }
-            else if((result == 2) && (firstChar == UnicodeArr[i].byte_1) && (secondChar == UnicodeArr[i].byte_2))
-           {
-               UnicodeArr[i].frequency += 1;
-               marker = 1;
-               break;
-           }
-           else if((result == 1) && (firstChar == UnicodeArr[i].byte_1))
+           else if((result == 4) && (firstChar == UnicodeArr[i].byte_1) && (secondChar == UnicodeArr[i].byte_2) &&
+                            (thirdChar == UnicodeArr[i].byte_3) && (fourthChar == UnicodeArr[i].byte_4))
            {
                UnicodeArr[i].frequency += 1;
                marker = 1;
@@ -164,21 +165,9 @@ int main(int argc, char **argv)
         //if character is not found in the array, add it and increase count by one
         if(marker = 0)
         {
-
-                if (result == 4)
-                {
-                    UnicodeArr[i].byte_1 = (unsigned char)firstChar;
-                    UnicodeArr[i].byte_2 = (unsigned char)secondChar;
-                    UnicodeArr[i].byte_3 = (unsigned char)thirdChar;
-                    UnicodeArr[i].byte_4 = (unsigned char)fourthChar;
-
-                    UnicodeArr[i].frequency += 1;
-                }
-                else if (result == 3)
+                if (result == 1)
                 {
                     UnicodeArr[count].byte_1 = (unsigned char)firstChar;
-                    UnicodeArr[count].byte_2 = (unsigned char)secondChar;
-                    UnicodeArr[count].byte_3 = (unsigned char)thirdChar;
 
                     UnicodeArr[i].frequency += 1;
                 }
@@ -189,12 +178,26 @@ int main(int argc, char **argv)
 
                     UnicodeArr[i].frequency += 1;
                 }
-                else
+
+                else if (result == 3)
                 {
                     UnicodeArr[count].byte_1 = (unsigned char)firstChar;
+                    UnicodeArr[count].byte_2 = (unsigned char)secondChar;
+                    UnicodeArr[count].byte_3 = (unsigned char)thirdChar;
 
                     UnicodeArr[i].frequency += 1;
                 }
+
+                else if (result == 4)
+                {
+                    UnicodeArr[i].byte_1 = (unsigned char)firstChar;
+                    UnicodeArr[i].byte_2 = (unsigned char)secondChar;
+                    UnicodeArr[i].byte_3 = (unsigned char)thirdChar;
+                    UnicodeArr[i].byte_4 = (unsigned char)fourthChar;
+
+                    UnicodeArr[i].frequency += 1;
+                }
+                
                 count++;
         }
 
