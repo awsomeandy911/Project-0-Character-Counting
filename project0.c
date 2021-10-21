@@ -88,7 +88,7 @@ int main(int argc, char **argv)
     emptyByte = fgetc(stdin);
     
     //get first bytes of characters until it reaches EOF
-    while(emptyByte != EOF) 
+    while((emptyByte = fgetc(stdin)) != EOF) 
     {
             //variable that stores the byte size result
             int result = 0;
