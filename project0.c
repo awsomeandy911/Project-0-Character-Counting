@@ -22,8 +22,8 @@ int swap(const void *X, const void *Y)
 {
     int xCount, yCount;
 
-    xCount = ((struct UnicodeElement *)X)->frequency;
-    yCount = ((struct UnicodeElement *)Y)->frequency;
+    xCount = ((UnicodeElement *)X)->frequency;
+    yCount = ((UnicodeElement *)Y)->frequency;
 
     if(yCount > xCount)
     {
@@ -37,7 +37,7 @@ int swap(const void *X, const void *Y)
 }
 
 //prints and sorts out unicode characters
-void print(struct UnicodeElement element[], int size)
+void print(UnicodeElement element[], int size)
 {
     //prints out unicode object values
     for (int i  = 0; i < size; i++)
@@ -64,7 +64,7 @@ void print(struct UnicodeElement element[], int size)
 int main(int argc, char **argv)
 {
     //struct that points to unicode objects
-    struct UnicodeElement *UnicodeArr = malloc(MAX_SIZE * sizeof(UnicodeElement));
+    UnicodeElement *UnicodeArr = malloc(MAX_SIZE * sizeof(UnicodeElement));
 
     //varaiables to store 1st, 2nd, 3rd, and 4th byte of unicode characters
     unsigned char firstChar, secondChar, thirdChar, fourthChar;
