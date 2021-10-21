@@ -15,15 +15,15 @@ struct UnicodeElement
     //variables for the bits of unicode characters in an character array
     unsigned char bytes[4];
 };
-typedef struct UnicodeElement UnicodeElement;
+
 
 //swap function that is used by built-in c function (quick sort)
 int swap(const void *X, const void *Y)
 {
     int xCount, yCount;
 
-    xCount = ((UnicodeElement *)X)->frequency;
-    yCount = ((UnicodeElement *)Y)->frequency;
+    xCount = ((struct UnicodeElement *)X)->frequency;
+    yCount = ((struct UnicodeElement *)Y)->frequency;
 
     if(yCount > xCount)
     {
@@ -37,7 +37,7 @@ int swap(const void *X, const void *Y)
 }
 
 //prints and sorts out unicode characters
-void print(UnicodeElement element[], int size)
+void print(struct UnicodeElement element[], int size)
 {
     //prints out unicode object values
     for (int i  = 0; i < size; i++)
@@ -64,7 +64,7 @@ void print(UnicodeElement element[], int size)
 int main(int argc, char **argv)
 {
     //struct that points to unicode objects
-    UnicodeElement *UnicodeArr = (malloc(sizeof(UnicodeElement) * MAX_SIZE));
+    struct UnicodeElement *UnicodeArr = (malloc(MAX_SIZE * sizeof(struct UnicodeElement)));
 
     //variable for intialization of empty byte
     int emptyByte;
@@ -78,15 +78,9 @@ int main(int argc, char **argv)
    //variable that acess struct elements from unicode and tracks count
     int count = 0;
 
-    //varaiable that marks if character exists
-    int marker = 0;
-
     //variable that stores the byte size result
     int result = 0;
-    
-    //varaible for the index used in loops
-    int i;
-    
+        
     //gets first byte by reading first unicode character
     emptyByte = fgetc(stdin);
 
@@ -117,11 +111,16 @@ int main(int argc, char **argv)
                 result = 1;
             }
         
+        
+        //varaible for the index used in loops
+        int i;
+
+        //varaiable that marks if character exists
+        int marker = 0;
 
         for(i = 0; i < count; i++)
         {
 
-            
             if(result == 4)
             {
                 marker = (UnicodeArr[i].bytes[0] == (unsigned char) emptyByte) & (UnicodeArr[i].bytes[1] ==  arr[1]) & (UnicodeArr[i].bytes[2] ==  arr[2]) 
@@ -181,7 +180,7 @@ int main(int argc, char **argv)
     }
 
     //quick sort function 
-    qsort(UnicodeArr, count, sizeof(UnicodeElement), swap);
+    qsort(UnicodeArr, count, sizeof(struct UnicodeElement), swap);
 
     //print out unicode character and the count
     print(UnicodeArr, count);
