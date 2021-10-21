@@ -14,6 +14,7 @@ struct UnicodeElement
 
     //variables for the bits of unicode characters in an character array
     unsigned char bytes[4];
+
 }; typedef struct UnicodeElement UnicodeElement;
 
 //swap function that is used by built-in c function (quick sort)
@@ -71,7 +72,7 @@ int main(int argc, char **argv)
     //varaible for bytes in a chacter array
     unsigned char arr[4];
     
-    //set all values of Unicode array to 0 in memory
+    //built in c fucntion that sets all values of array to 0 in the memory
     memset(UnicodeArr, 0, sizeof(UnicodeArr));
 
    //variable that acess struct elements from unicode and tracks count
@@ -87,7 +88,7 @@ int main(int argc, char **argv)
     emptyByte = fgetc(stdin);
 
     //get first bytes of characters until it reaches EOF
-    while(emptyByte !=EOF) 
+    while(emptyByte != EOF) 
     {
         //initialize result to 0 in loop
         result = 0;
@@ -101,12 +102,10 @@ int main(int argc, char **argv)
             else if (emptyByte >= 224) 
             {  
                 result = 3;
-              
             } 
             else if (emptyByte >= 192) 
             {  
                 result = 2;
-                
             }
             else
             {
@@ -201,7 +200,7 @@ int main(int argc, char **argv)
                 UnicodeArr[count].bytes[3] = arr[3];
             }
            
-           //increment count by 1
+           //increment count of characters by 1
             count++;
         }
     }
