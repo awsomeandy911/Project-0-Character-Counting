@@ -1,5 +1,5 @@
-# cs3113fa21-project0
-Project 0: Character counting
+
+# Project 0: Character counting
 CS 3113 Fall 2021
 Andy Le
 
